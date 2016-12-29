@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Customer being serviced"
+            android:textColor="#455A64"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/currentCustText"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="98729827"
+            android:layout_gravity="center_vertical"
+            android:textColor="#546E7A"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="Your Customer number"
+            android:textColor="#607D8B"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/myNumText"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:paddingRight="16dp"
+            android:text="98298279"
+            android:textColor="#78909C"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+</LinearLayout>
