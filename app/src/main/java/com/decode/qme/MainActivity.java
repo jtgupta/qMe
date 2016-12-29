@@ -14,6 +14,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -35,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private BeaconManager mBeaconManager;
     ArrayAdapter<String> departmentAdapter;
     ListView lvDepartment;
-
+    DatabaseReference mainRef = FirebaseDatabase.getInstance().getReference();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public HashMap<String, Region> ssnRegionMap;
     private static final Identifier nameSpaceId = Identifier.parse("0x5dc33487f02e477d4058");
     public ArrayList<String> regionNames = new ArrayList<>();
@@ -142,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         lvDepartment.setAdapter(departmentAdapter);
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 String str = regionNames.get(position).toString();
@@ -151,7 +161,36 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
                 builder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
+                        final DatabaseReference queueRef = mainRef.child("queue").child(regions.get(position));
+                        queueRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                long lastPos,count;
+                                if(dataSnapshot.child("lastuser").getValue()!=null)
+                                {
+                                    lastPos = (long) dataSnapshot.child("lastuser").getValue();
+                                }
+                                else
+                                    lastPos = 0;
+                                if(dataSnapshot.child("length").getValue()!=null)
+                                {
+                                    count = (long) dataSnapshot.child("length").getValue();
+                                }
+                                else
+                                    count = 0;
+                                lastPos++;
+                                count++;
+                                queueRef.child("users").child(user.getUid()).setValue(lastPos);
+                                queueRef.child("lastuser").setValue(lastPos);
+                                queueRef.child("length").setValue(count);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
                 builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
