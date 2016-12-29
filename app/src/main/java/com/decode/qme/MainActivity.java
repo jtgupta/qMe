@@ -26,28 +26,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private BeaconManager mBeaconManager;
     public HashMap<String,Region> ssnRegionMap;
     private static final Identifier nameSpaceId = Identifier.parse("0x5dc33487f02e477d4058");
-
+    public ArrayList<String> regionNames = new ArrayList<>();
+    public ArrayList<String> regions= new ArrayList<>();
 
     @Override
     public void onResume() {
         super.onResume();
-
-        ssnRegionMap = new HashMap<>();
-
-
-        ssnRegionMap.put("0x0117c59825E9",new Region("Test Room",nameSpaceId, Identifier.parse("0x0117c59825E9"),null));
-        ssnRegionMap.put("0x0117c55be3a8",new Region("Git Room",nameSpaceId,Identifier.parse("0x0117c55be3a8"),null));
-        ssnRegionMap.put("0x0117c552c493",new Region("Android Room",nameSpaceId,Identifier.parse("0x0117c552c493"),null));
-        ssnRegionMap.put("0x0117c55fc452",new Region("iOS Room",nameSpaceId,Identifier.parse("0x0117c55fc452"),null));
-        ssnRegionMap.put("0x0117c555c65f",new Region("Python Room",nameSpaceId,Identifier.parse("0x0117c555c65f"),null));
-        ssnRegionMap.put("0x0117c55d6660",new Region("Office",nameSpaceId,Identifier.parse("0x0117c55d6660"),null));
-        ssnRegionMap.put("0x0117c55ec086",new Region("Ruby Room",nameSpaceId,Identifier.parse("0x0117c55ec086"),null));
-
-        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
-
-        mBeaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
-        new BackgroundPowerSaver(this);
 
         mBeaconManager.bind(this);
     }
@@ -73,12 +57,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 switch (i){
                     case INSIDE:
                         Log.i("TAG","Enter " + regionName);
-
+                        if(!regionNames.contains(regionName))
+                        {
+                            regionNames.add(regionName);
+                            regions.add(beaconSSN);
+                        }
 
                         break;
                     case OUTSIDE:
                         Log.i("TAG","Outside " + regionName);
-
+                        if(regionNames.contains(regionName))
+                        {
+                            regionNames.remove(regionName);
+                            regions.remove(beaconSSN);
+                        }
 
                         break;
                 }
@@ -109,6 +101,23 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         setContentView(R.layout.activity_main);
 
 
+
+        ssnRegionMap = new HashMap<>();
+
+
+        ssnRegionMap.put("0x0117c59825E9",new Region("Test Room",nameSpaceId, Identifier.parse("0x0117c59825E9"),null));
+        ssnRegionMap.put("0x0117c55be3a8",new Region("Git Room",nameSpaceId,Identifier.parse("0x0117c55be3a8"),null));
+        ssnRegionMap.put("0x0117c552c493",new Region("Android Room",nameSpaceId,Identifier.parse("0x0117c552c493"),null));
+        ssnRegionMap.put("0x0117c55fc452",new Region("iOS Room",nameSpaceId,Identifier.parse("0x0117c55fc452"),null));
+        ssnRegionMap.put("0x0117c555c65f",new Region("Withdraw counter",nameSpaceId,Identifier.parse("0x0117c555c65f"),null));
+        ssnRegionMap.put("0x0117c55d6660",new Region("Deposit counter",nameSpaceId,Identifier.parse("0x0117c55d6660"),null));
+        ssnRegionMap.put("0x0117c55ec086",new Region("Ruby Room",nameSpaceId,Identifier.parse("0x0117c55ec086"),null));
+
+        mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
+
+        mBeaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
+        new BackgroundPowerSaver(this);
 
     }
 }
