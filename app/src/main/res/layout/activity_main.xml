@@ -10,7 +10,20 @@
     tools:context="com.decode.qme.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/lv_title"
+        android:text="SELECT PURPOSE OF VISIT"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"/>
+
+    <ListView
+        android:id="@+id/lv_Departments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lv_title"
+        android:paddingTop="20dp">
+    </ListView>
+
 </RelativeLayout>

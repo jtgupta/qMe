@@ -1,9 +1,16 @@
 package com.decode.qme;
 
 import android.os.RemoteException;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -105,19 +112,29 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         ssnRegionMap = new HashMap<>();
 
 
-        ssnRegionMap.put("0x0117c59825E9",new Region("Test Room",nameSpaceId, Identifier.parse("0x0117c59825E9"),null));
-        ssnRegionMap.put("0x0117c55be3a8",new Region("Git Room",nameSpaceId,Identifier.parse("0x0117c55be3a8"),null));
-        ssnRegionMap.put("0x0117c552c493",new Region("Android Room",nameSpaceId,Identifier.parse("0x0117c552c493"),null));
-        ssnRegionMap.put("0x0117c55fc452",new Region("iOS Room",nameSpaceId,Identifier.parse("0x0117c55fc452"),null));
-        ssnRegionMap.put("0x0117c555c65f",new Region("Withdraw counter",nameSpaceId,Identifier.parse("0x0117c555c65f"),null));
-        ssnRegionMap.put("0x0117c55d6660",new Region("Deposit counter",nameSpaceId,Identifier.parse("0x0117c55d6660"),null));
-        ssnRegionMap.put("0x0117c55ec086",new Region("Ruby Room",nameSpaceId,Identifier.parse("0x0117c55ec086"),null));
+        ssnRegionMap.put("0x0117c59825E9",new Region("Withdraw money",nameSpaceId, Identifier.parse("0x0117c59825E9"),null));
+        ssnRegionMap.put("0x0117c55be3a8",new Region("Deposit money",nameSpaceId,Identifier.parse("0x0117c55be3a8"),null));
+        ssnRegionMap.put("0x0117c552c493",new Region("Loan facility",nameSpaceId,Identifier.parse("0x0117c552c493"),null));
+        ssnRegionMap.put("0x0117c55fc452",new Region("Account related queries",nameSpaceId,Identifier.parse("0x0117c55fc452"),null));
+        ssnRegionMap.put("0x0117c555c65f",new Region("Fixed Deposit",nameSpaceId,Identifier.parse("0x0117c555c65f"),null));
+        ssnRegionMap.put("0x0117c55d6660",new Region("Credit Card facility",nameSpaceId,Identifier.parse("0x0117c55d6660"),null));
+        ssnRegionMap.put("0x0117c55ec086",new Region("Service complaints",nameSpaceId,Identifier.parse("0x0117c55ec086"),null));
 
         mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
 
         mBeaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
         new BackgroundPowerSaver(this);
+
+        ListView lvDepartment = (ListView) findViewById(R.id.lv_Departments);
+        ArrayAdapter<String> departmentAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_department, regionNames);
+        lvDepartment.setAdapter(departmentAdapter);
+        lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
     }
 }
