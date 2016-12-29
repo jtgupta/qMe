@@ -1,9 +1,11 @@
 package com.decode.qme;
 
+import android.content.DialogInterface;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,6 +144,24 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                String str = regionNames.get(position).toString();
+                builder.setMessage("Do you want to select "+str+" ?")
+                        .setTitle("Confirm action");
+
+                builder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                    }
+                });
+                builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                        dialog.show();
             }
         });
 
