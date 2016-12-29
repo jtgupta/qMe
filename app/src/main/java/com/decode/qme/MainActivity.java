@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                     count = 0;
                                 if(dataSnapshot.child("firstuser").getValue()==null)
                                 {
-                                    firstPos = 0;
+                                    firstPos = 1;
                                     queueRef.child("firstuser").setValue(firstPos);
                                 }
 
