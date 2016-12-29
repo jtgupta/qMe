@@ -22,7 +22,7 @@ public class StartActivity extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null) {
             finish();
-            Intent i = new Intent(this, MainActivity.class);
+            Intent i = new Intent(this, HomeActivity.class);
             startActivity(i);
         }
         else {
@@ -43,7 +43,7 @@ public class StartActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Log.d(TAG, "onActivityResult: added a user");
                 finish();
-                Intent i = new Intent(this, MainActivity.class);
+                Intent i = new Intent(this, HomeActivity.class);
                 startActivity(i);
             } else {
                 // user is not signed in. Maybe just wait for the user to press

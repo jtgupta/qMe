@@ -31,10 +31,13 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     private static String TAG = "MyActivity";
     private BeaconManager mBeaconManager;
-    public HashMap<String,Region> ssnRegionMap;
+    ArrayAdapter<String> departmentAdapter;
+    ListView lvDepartment;
+
+    public HashMap<String, Region> ssnRegionMap;
     private static final Identifier nameSpaceId = Identifier.parse("0x5dc33487f02e477d4058");
     public ArrayList<String> regionNames = new ArrayList<>();
-    public ArrayList<String> regions= new ArrayList<>();
+    public ArrayList<String> regions = new ArrayList<>();
 
     @Override
     public void onResume() {
@@ -60,23 +63,23 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             public void didDetermineStateForRegion(int i, Region region) {
                 String regionName = region.getUniqueId();
                 String beaconSSN = region.getId2().toHexString();
-                Log.d(TAG, "didDetermineStateForRegion: "+i);
-                switch (i){
+                Log.d(TAG, "didDetermineStateForRegion: " + i);
+                switch (i) {
                     case INSIDE:
-                        Log.i("TAG","Enter " + regionName);
-                        if(!regionNames.contains(regionName))
-                        {
+                        Log.i("TAG", "Enter " + regionName);
+                        if (!regionNames.contains(regionName)) {
                             regionNames.add(regionName);
                             regions.add(beaconSSN);
+                            changeData();
                         }
 
                         break;
                     case OUTSIDE:
-                        Log.i("TAG","Outside " + regionName);
-                        if(regionNames.contains(regionName))
-                        {
+                        Log.i("TAG", "Outside " + regionName);
+                        if (regionNames.contains(regionName)) {
                             regionNames.remove(regionName);
                             regions.remove(beaconSSN);
+                            changeData();
                         }
 
                         break;
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         });
         try {
-            for(String key:ssnRegionMap.keySet()) {
+            for (String key : ssnRegionMap.keySet()) {
                 Region region = ssnRegionMap.get(key);
                 mBeaconManager.startMonitoringBeaconsInRegion(region);
             }
@@ -94,7 +97,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
     }
 
-
+    public void changeData() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                departmentAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 
     @Override
     protected void onPause() {
@@ -108,17 +118,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         setContentView(R.layout.activity_main);
 
 
-
         ssnRegionMap = new HashMap<>();
 
 
-        ssnRegionMap.put("0x0117c59825E9",new Region("Withdraw money",nameSpaceId, Identifier.parse("0x0117c59825E9"),null));
-        ssnRegionMap.put("0x0117c55be3a8",new Region("Deposit money",nameSpaceId,Identifier.parse("0x0117c55be3a8"),null));
-        ssnRegionMap.put("0x0117c552c493",new Region("Loan facility",nameSpaceId,Identifier.parse("0x0117c552c493"),null));
-        ssnRegionMap.put("0x0117c55fc452",new Region("Account related queries",nameSpaceId,Identifier.parse("0x0117c55fc452"),null));
-        ssnRegionMap.put("0x0117c555c65f",new Region("Fixed Deposit",nameSpaceId,Identifier.parse("0x0117c555c65f"),null));
-        ssnRegionMap.put("0x0117c55d6660",new Region("Credit Card facility",nameSpaceId,Identifier.parse("0x0117c55d6660"),null));
-        ssnRegionMap.put("0x0117c55ec086",new Region("Service complaints",nameSpaceId,Identifier.parse("0x0117c55ec086"),null));
+        ssnRegionMap.put("0x0117c59825E9", new Region("Withdraw money", nameSpaceId, Identifier.parse("0x0117c59825E9"), null));
+        ssnRegionMap.put("0x0117c55be3a8", new Region("Deposit money", nameSpaceId, Identifier.parse("0x0117c55be3a8"), null));
+        ssnRegionMap.put("0x0117c552c493", new Region("Loan facility", nameSpaceId, Identifier.parse("0x0117c552c493"), null));
+        ssnRegionMap.put("0x0117c55fc452", new Region("Account related queries", nameSpaceId, Identifier.parse("0x0117c55fc452"), null));
+        ssnRegionMap.put("0x0117c555c65f", new Region("Fixed Deposit", nameSpaceId, Identifier.parse("0x0117c555c65f"), null));
+        ssnRegionMap.put("0x0117c55d6660", new Region("Credit Card facility", nameSpaceId, Identifier.parse("0x0117c55d6660"), null));
+        ssnRegionMap.put("0x0117c55ec086", new Region("Service complaints", nameSpaceId, Identifier.parse("0x0117c55ec086"), null));
 
         mBeaconManager = BeaconManager.getInstanceForApplication(this.getApplicationContext());
 
@@ -126,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
         new BackgroundPowerSaver(this);
 
-        ListView lvDepartment = (ListView) findViewById(R.id.lv_Departments);
-        ArrayAdapter<String> departmentAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_department, regionNames);
+        lvDepartment = (ListView) findViewById(R.id.lv_Departments);
+        departmentAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_department, regionNames);
         lvDepartment.setAdapter(departmentAdapter);
         lvDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
