@@ -1,7 +1,9 @@
 package com.decode.qme;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -167,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
                                 long lastPos,count,firstPos;
+                                final long curr;
                                 if(dataSnapshot.child("lastuser").getValue()!=null)
                                 {
                                     lastPos = (long) dataSnapshot.child("lastuser").getValue();
@@ -187,9 +192,19 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
                                 lastPos++;
                                 count++;
-                                queueRef.child("users").child(user.getUid()).setValue(lastPos);
-                                queueRef.child("lastuser").setValue(lastPos);
+                                curr=lastPos;
                                 queueRef.child("length").setValue(count);
+                                queueRef.child("lastuser").setValue(lastPos);
+                                queueRef.child("users").child(user.getUid()).setValue(lastPos).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Intent intent = new Intent(MainActivity.this,ServiceInfo.class);
+                                        intent.putExtra("queueId",regions.get(position));
+                                        intent.putExtra("myPos",curr);
+                                        startActivity(intent);
+
+                                    }
+                                });
                             }
 
                             @Override
