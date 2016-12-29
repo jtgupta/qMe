@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                long lastPos,count;
+                                long lastPos,count,firstPos;
                                 if(dataSnapshot.child("lastuser").getValue()!=null)
                                 {
                                     lastPos = (long) dataSnapshot.child("lastuser").getValue();
@@ -179,6 +179,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                 }
                                 else
                                     count = 0;
+                                if(dataSnapshot.child("firstuser").getValue()==null)
+                                {
+                                    firstPos = 0;
+                                    queueRef.child("firstuser").setValue(firstPos);
+                                }
+
                                 lastPos++;
                                 count++;
                                 queueRef.child("users").child(user.getUid()).setValue(lastPos);
